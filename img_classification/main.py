@@ -8,11 +8,14 @@ Benchmark of deep learning architectures for image classification
 
 import os
 import argparse
+import math
+from shutil import rmtree
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from fastprogress import master_bar
 from torch.utils.tensorboard import SummaryWriter
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from models import LeNet5
 from training import train, evaluate
@@ -66,11 +69,9 @@ def main(args):
     else:
         raise NotImplementedError()
 
-    from torch.optim.lr_scheduler import ReduceLROnPlateau
     scheduler = ReduceLROnPlateau(optimizer, factor=0.1, patience=0, threshold=1e-2)
 
     log_path = os.path.join('logs', args.training_name)
-    from shutil import rmtree
     if os.path.exists(log_path):
         rmtree(log_path)
     logger = SummaryWriter(log_path)
