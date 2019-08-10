@@ -142,7 +142,7 @@ if __name__ == '__main__':
     parser.add_argument("--nb_epochs", "-n", type=int, default=10, help="Number of epochs to train (default: 10)")
     # Session management
     parser.add_argument("--resume", type=str, default=None, help="Checkpoint file to resume (default: None)")
-    parser.add_argument("--output_folder", type=str, default='.', help="Output folder for log and states (default: '.')")
+    parser.add_argument("--output_folder", type=str, default='training-outputs', help="Output folder for log and states (default: 'training-outputs')")
     args = parser.parse_args()
 
     main(args)

@@ -108,3 +108,4 @@ venv.bak/
 logs/
 data/
 .idea/
+training-outputs/
