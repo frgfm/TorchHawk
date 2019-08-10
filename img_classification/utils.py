@@ -44,9 +44,9 @@ def load_training_state(net, optimizer, file_path):
 def normal_initialization(m, mean=0, std=0.2):
     """
     Applies initial weights to certain layers in a model .
-    The weights are taken from a normal distribution 
+    The weights are taken from a normal distribution
     with mean = 0, std dev = 0.02.
-    :param m: A module or layer in a network    
+    :param m: A module or layer in a network
     """
     # classname will be something like:
     # `Conv`, `BatchNorm2d`, `Linear`, etc.
