@@ -39,6 +39,7 @@ def train(net, train_loader, optimizer, criterion, master_bar, logger=None, log_
         if logger is not None and (batch_idx + 1) % log_freq == 0:
             current_iter = epoch * len(train_loader) + batch_idx + 1
             logger.add_scalar(f"Training loss", loss.item(), current_iter)
+            logger.flush()
             # # Histograms of parameters value and gradients
             # for name, param in D.named_parameters():
             #     if param.requires_grad and "bias" not in name:
