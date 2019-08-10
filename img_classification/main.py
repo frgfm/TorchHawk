@@ -21,6 +21,7 @@ from models import LeNet5
 from training import train_epoch, evaluate
 from utils import normal_initialization, set_seed
 from dataset import get_dataloaders
+from transforms.transforms import get_transforms
 
 
 SEED = 42
@@ -30,8 +31,11 @@ def main(args):
 
     set_seed(SEED)
 
+    train_transforms, test_transforms = get_transforms(args.dataset)
+    print(f"Data transformations:\n{train_transforms}\n")
+
     # Get the dataloaders
-    train_loader, test_loader = get_dataloaders(args.dataset, args.batch_size, args.workers)
+    train_loader, test_loader = get_dataloaders(args.dataset, args.batch_size, args.workers, train_transforms, test_transforms)
 
     # Architecture
     if args.dataset == 'mnist':
