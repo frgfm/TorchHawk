@@ -19,34 +19,8 @@ from training import train, evaluate
 from utils import save_training_state, load_training_state, normal_initialization
 from dataset import get_dataloaders
 
-parser = argparse.ArgumentParser()
-parser.add_argument("training_name", type=str, help="The name of your training")
-# Dataset
-parser.add_argument("--dataset", type=str, default='mnist', help="Dataset to be used (default: mnist)")
-# Hardware
-parser.add_argument("--gpu", type=int, default=0, help="GPU ID you wish to use (default: 0)")
-parser.add_argument("--workers", type=int, default=2, help="Number of workers used for data loading (default: 2)")
-# Loader
-parser.add_argument("--batch_size", "-b", type=int, default=4, help="Batch size (default: 4)")
-# Architecture
-parser.add_argument("--activation", type=str, default='relu', help="Activation function to be used (default: relu)")
-parser.add_argument("--pooling", type=str, default='max', help="Pooling layer to be used (default: maxpooling)")
-parser.add_argument("--drop_rate", type=float, default=0., help="Drop rate of FC layers' neurons (default: 0)")
-parser.add_argument('--init_weights', action='store_true', help="Should the weights be initialized (default: False)")
-# Hyper parameters
-parser.add_argument("--criterion", type=str, default='ce', help="Loss criterion (default: cross entropy)")
-parser.add_argument("--optimizer", type=str, default='sgd', help="Parameter optimizer (default: SGD)")
-parser.add_argument("--lr", type=float, default=2e-4, help="Learning rate (default: 2e-4)")
-parser.add_argument("--momentum", type=float, default=0., help="SGD Momentum (default: 0)")
-parser.add_argument("--weight_decay", type=float, default=0., help="Weight decay (default: 0)")
-parser.add_argument("--nesterov", action='store_true', help="Nesterov momentum (default: False)")
-parser.add_argument("--nb_epochs", "-n", type=int, default=10, help="Number of epochs to train (default: 10)")
-# Session management
-parser.add_argument("--resume", type=str, default=None, help="Checkpoint file to resume (default: None)")
-args = parser.parse_args()
 
-
-def main():
+def main(args):
 
     # Get the dataloaders
     train_loader, test_loader = get_dataloaders(args.dataset, args.batch_size, args.workers)
@@ -110,4 +84,31 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("training_name", type=str, help="The name of your training")
+    # Dataset
+    parser.add_argument("--dataset", type=str, default='mnist', help="Dataset to be used (default: mnist)")
+    # Hardware
+    parser.add_argument("--gpu", type=int, default=0, help="GPU ID you wish to use (default: 0)")
+    parser.add_argument("--workers", type=int, default=2, help="Number of workers used for data loading (default: 2)")
+    # Loader
+    parser.add_argument("--batch_size", "-b", type=int, default=4, help="Batch size (default: 4)")
+    # Architecture
+    parser.add_argument("--activation", type=str, default='relu', help="Activation function to be used (default: relu)")
+    parser.add_argument("--pooling", type=str, default='max', help="Pooling layer to be used (default: maxpooling)")
+    parser.add_argument("--drop_rate", type=float, default=0., help="Drop rate of FC layers' neurons (default: 0)")
+    parser.add_argument('--init_weights', action='store_true', help="Should the weights be initialized (default: False)")
+    # Hyper parameters
+    parser.add_argument("--criterion", type=str, default='ce', help="Loss criterion (default: cross entropy)")
+    parser.add_argument("--optimizer", type=str, default='sgd', help="Parameter optimizer (default: SGD)")
+    parser.add_argument("--lr", type=float, default=2e-4, help="Learning rate (default: 2e-4)")
+    parser.add_argument("--momentum", type=float, default=0., help="SGD Momentum (default: 0)")
+    parser.add_argument("--weight_decay", type=float, default=0., help="Weight decay (default: 0)")
+    parser.add_argument("--nesterov", action='store_true', help="Nesterov momentum (default: False)")
+    parser.add_argument("--nb_epochs", "-n", type=int, default=10, help="Number of epochs to train (default: 10)")
+    # Session management
+    parser.add_argument("--resume", type=str, default=None, help="Checkpoint file to resume (default: None)")
+    args = parser.parse_args()
+
+    main(args)
