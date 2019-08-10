@@ -18,7 +18,7 @@ from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from models import LeNet5
-from training import train, evaluate
+from training import train_epoch, evaluate
 from utils import normal_initialization, set_seed
 from dataset import get_dataloaders
 
@@ -90,7 +90,7 @@ def main(args):
     mb = master_bar(range(args.nb_epochs))
     for epoch_idx in mb:
         # Training
-        train_loss = train(net, train_loader, optimizer, criterion, mb, logger=logger, epoch=start_epoch + epoch_idx)
+        train_epoch(net, train_loader, optimizer, criterion, mb, tb_logger=logger, epoch=start_epoch + epoch_idx)
 
         # Evaluation
         val_loss, accuracy = evaluate(net, test_loader, criterion)
