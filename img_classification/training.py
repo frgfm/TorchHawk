@@ -34,7 +34,7 @@ def train(net, train_loader, optimizer, criterion, master_bar, logger=None, log_
         loss = criterion(outputs, target)
         loss.backward()
         optimizer.step()
-        master_bar.child.comment = f"Training loss: {loss.item()}"
+        master_bar.child.comment = f"Training loss: {loss.item():.5}"
 
         if logger is not None and (batch_idx + 1) % log_freq == 0:
             current_iter = epoch * len(train_loader) + batch_idx + 1

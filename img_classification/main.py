@@ -85,7 +85,7 @@ def main(args):
         val_loss, accuracy = evaluate(net, test_loader, criterion)
 
         mb.first_bar.comment = f"Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs}"
-        mb.write(f'Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs} - Validation loss: {val_loss} - Accuracy: {accuracy}')
+        mb.write(f'Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs} - Validation loss: {val_loss:.4} - Accuracy: {accuracy:.2%}')
 
         if logger is not None:
             current_iter = (start_epoch + epoch_idx + 1) * len(train_loader)
