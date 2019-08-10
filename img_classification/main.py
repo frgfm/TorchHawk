@@ -90,6 +90,7 @@ def main(args):
         if logger is not None:
             current_iter = (start_epoch + epoch_idx + 1) * len(train_loader)
             logger.add_scalar(f"Validation loss", val_loss, current_iter)
+            logger.add_scalar(f"Error rate", 1 - accuracy, current_iter)
             logger.flush()
         scheduler.step(val_loss)
 
