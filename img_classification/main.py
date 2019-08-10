@@ -64,7 +64,8 @@ def main(args):
     else:
         raise NotImplementedError()
 
-    logger = SummaryWriter(os.path.join('logs', args.training_name))
+    from torch.optim.lr_scheduler import ReduceLROnPlateau
+    scheduler = ReduceLROnPlateau(optimizer, factor=0.1, patience=0, threshold=1e-2)
 
     # Train
     mb = master_bar(range(args.nb_epochs))
@@ -82,6 +83,7 @@ def main(args):
             current_iter = (start_epoch + epoch_idx + 1) * len(train_loader)
             logger.add_scalar(f"Validation loss", val_loss, current_iter)
             logger.flush()
+        scheduler.step(val_loss)
 
 
 if __name__ == '__main__':
