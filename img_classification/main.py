@@ -19,11 +19,16 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from models import LeNet5
 from training import train, evaluate
-from utils import save_training_state, load_training_state, normal_initialization
+from utils import normal_initialization, set_seed
 from dataset import get_dataloaders
 
 
+SEED = 42
+
+
 def main(args):
+
+    set_seed(SEED)
 
     # Get the dataloaders
     train_loader, test_loader = get_dataloaders(args.dataset, args.batch_size, args.workers)

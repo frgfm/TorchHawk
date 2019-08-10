@@ -15,6 +15,25 @@ __status__ = 'Development'
 import os
 import torch
 import shutil
+import random
+import torch
+import numpy as np
+
+def set_seed(seed):
+    """Set the seed for pseudo-random number generations
+
+    Args:
+        seed (int): seed to set for reproducibility
+    """
+
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 
 def save_training_state(net, optimizer, epoch, training_name, folder='checkpoint', best_state=False):
