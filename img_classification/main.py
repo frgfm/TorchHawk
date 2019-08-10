@@ -49,17 +49,17 @@ def main(args):
     drop_rate = args.drop_rate
 
     # Build model
-    net = LeNet5(in_channels, activation, pooling, drop_rate)
+    model = LeNet5(in_channels, activation, pooling, drop_rate)
     if torch.cuda.is_available():
         torch.cuda.set_device(args.gpu)
-        net = net.cuda()
+        model = model.cuda()
     # Weight normal initialization
     if args.init_weights:
-        net.apply(normal_initialization)
+        model.apply(normal_initialization)
 
     start_epoch = 0
     if args.resume is not None:
-        net, optimizer, start_epoch = load_training_state(net, optimizer, args.resume)
+        model, optimizer, start_epoch = load_training_state(model, optimizer, args.resume)
 
     # Loss function & optimizer
     if args.criterion == 'ce':
@@ -68,13 +68,13 @@ def main(args):
         raise NotImplementedError()
     if args.optimizer == 'sgd':
         # Issue
-        optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay, nesterov=args.nesterov)
+        optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay, nesterov=args.nesterov)
     elif args.optimizer == 'adam':
-        optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+        optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     else:
         raise NotImplementedError()
 
-    scheduler = ReduceLROnPlateau(optimizer, factor=0.1, patience=0, threshold=1e-2)
+    scheduler = ReduceLROnPlateau(optimizer, factor=0.5, patience=0, threshold=1e-2, verbose=True)
 
     # Output folder
     output_folder = os.path.join(args.output_folder, args.training_name)
@@ -90,20 +90,20 @@ def main(args):
     mb = master_bar(range(args.nb_epochs))
     for epoch_idx in mb:
         # Training
-        train_epoch(net, train_loader, optimizer, criterion, mb, tb_logger=logger, epoch=start_epoch + epoch_idx)
+        train_epoch(model, train_loader, optimizer, criterion, mb, tb_logger=logger, epoch=start_epoch + epoch_idx)
 
         # Evaluation
-        val_loss, accuracy = evaluate(net, test_loader, criterion)
+        val_loss, accuracy = evaluate(model, test_loader, criterion)
 
         mb.first_bar.comment = f"Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs}"
-        mb.write(f'Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs} - Validation loss: {val_loss:.4} - Accuracy: {accuracy:.2%}')
+        mb.write(f'Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs} - Validation loss: {val_loss:.4} (Acc@1: {accuracy:.2%})')
 
         # State saving
         if val_loss < best_loss:
             print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
             best_loss = val_loss
             torch.save(dict(epoch=start_epoch + epoch_idx,
-                            model_state_dict=net.state_dict(),
+                            model_state_dict=model.state_dict(),
                             optimizer_state_dict=optimizer.state_dict(),
                             val_loss=val_loss),
                        os.path.join(output_folder, "training_state.pth"))
