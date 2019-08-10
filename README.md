@@ -27,7 +27,7 @@ How to train your model
 
 
 ```bash
-python img_classification/main.py test --dataset mnist -n 10 --lr 5e-5 --batch_size 8 --momentum 0.9 --weight_decay 5e-4 --nesterov
+python img_classification/main.py lenet5 --dataset mnist -n 10 --lr 5e-4 --batch_size 8 --optimizer adam --drop_rate 0.3 --workers 8
 ```
 
 
@@ -35,16 +35,34 @@ python img_classification/main.py test --dataset mnist -n 10 --lr 5e-5 --batch_s
 Depending on your seed, you should get similar results to:
 
 ```bash
-Epoch 1/10 - Validation loss: 0.637735663574934 - Accuracy: 0.8272                                                                                              
-Epoch 2/10 - Validation loss: 0.2974701254960149 - Accuracy: 0.9073                                                                                             
-Epoch 3/10 - Validation loss: 0.20943492125663907 - Accuracy: 0.9384                                                                                            
-Epoch 4/10 - Validation loss: 0.16496901647993364 - Accuracy: 0.9528                                                                                            
-Epoch 5/10 - Validation loss: 0.12413150504280347 - Accuracy: 0.963                                                                                             
-Epoch 6/10 - Validation loss: 0.11015441644398961 - Accuracy: 0.9674                                                                                            
-Epoch 7/10 - Validation loss: 0.09114648424847983 - Accuracy: 0.9742                                                                                            
-Epoch 8/10 - Validation loss: 0.08870566121073789 - Accuracy: 0.9721                                                                                            
-Epoch 9/10 - Validation loss: 0.07673511246949201 - Accuracy: 0.9768                                                                                            
-Epoch 10/10 - Validation loss: 0.07370509473233833 - Accuracy: 0.9786 
+Data transformations:
+Compose(
+    RandomRotation(degrees=(-30, 30), resample=False, expand=False)
+    ToTensor()
+    Normalize(mean=(0.1307,), std=(0.3081,))
+)
+
+Epoch 1/10 - Validation loss: 0.08775 (Acc@1: 96.97%)                                                                                                           
+Validation loss decreased inf --> 0.08775: saving state...
+Epoch 2/10 - Validation loss: 0.05491 (Acc@1: 98.20%)                                                                                                           
+Validation loss decreased 0.08775 --> 0.05491: saving state...
+Epoch 3/10 - Validation loss: 0.06731 (Acc@1: 97.83%)                                                                                                           
+Epoch     2: reducing learning rate of group 0 to 2.5000e-04.
+Epoch 4/10 - Validation loss: 0.04157 (Acc@1: 98.69%)                                                                                                           
+Validation loss decreased 0.05491 --> 0.04157: saving state...
+Epoch 5/10 - Validation loss: 0.03381 (Acc@1: 98.85%)                                                                                                           
+Validation loss decreased 0.04157 --> 0.03381: saving state...
+Epoch 6/10 - Validation loss: 0.03288 (Acc@1: 98.97%)                                                                                                           
+Validation loss decreased 0.03381 --> 0.03288: saving state...
+Epoch 7/10 - Validation loss: 0.03146 (Acc@1: 99.07%)                                                                                                           
+Validation loss decreased 0.03288 --> 0.03146: saving state...
+Epoch 8/10 - Validation loss: 0.03196 (Acc@1: 99.03%)                                                                                                           
+Epoch     7: reducing learning rate of group 0 to 1.2500e-04.
+Epoch 9/10 - Validation loss: 0.02716 (Acc@1: 99.26%)                                                                                                           
+Validation loss decreased 0.03146 --> 0.02716: saving state...
+Epoch 10/10 - Validation loss: 0.02684 (Acc@1: 99.22%)                                                                                                          
+Validation loss decreased 0.02716 --> 0.02684: saving state...
+
 ```
 
 
@@ -54,7 +72,7 @@ Epoch 10/10 - Validation loss: 0.07370509473233833 - Accuracy: 0.9786
 Start the tensorboard server locally to visualize your training losses:
 
 ```bash
-tensorboard --logdir=logs
+tensorboard --logdir=training-outputs/logs
 ```
 
 Then open a new tab in your browser and navigate to `<YOUR_COMPUTER_NAME>:6006`  to monitor your training.
