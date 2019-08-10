@@ -61,6 +61,8 @@ def main(args):
     if args.optimizer == 'sgd':
         # Issue
         optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay, nesterov=args.nesterov)
+    elif args.optimizer == 'adam':
+        optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     else:
         raise NotImplementedError()
 
