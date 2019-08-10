@@ -18,11 +18,12 @@ from fastprogress import progress_bar
 def train(net, train_loader, optimizer, criterion, master_bar, logger=None, log_freq=100, epoch=0):
     # Training
     net.train()
+    loader_iter = iter(train_loader)
     for batch_idx in progress_bar(range(len(train_loader)), parent=master_bar):
 
         optimizer.zero_grad()
 
-        x, target = next(iter(train_loader))
+        x, target = loader_iter.next()
         if torch.cuda.is_available():
             x, target = x.cuda(), target.cuda()
 
