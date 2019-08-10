@@ -69,6 +69,12 @@ def main(args):
     from torch.optim.lr_scheduler import ReduceLROnPlateau
     scheduler = ReduceLROnPlateau(optimizer, factor=0.1, patience=0, threshold=1e-2)
 
+    log_path = os.path.join('logs', args.training_name)
+    from shutil import rmtree
+    if os.path.exists(log_path):
+        rmtree(log_path)
+    logger = SummaryWriter(log_path)
+
     # Train
     mb = master_bar(range(args.nb_epochs))
     for epoch_idx in mb:
