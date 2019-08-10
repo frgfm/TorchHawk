@@ -71,12 +71,17 @@ def main(args):
 
     scheduler = ReduceLROnPlateau(optimizer, factor=0.1, patience=0, threshold=1e-2)
 
-    log_path = os.path.join('logs', args.training_name)
+    # Output folder
+    output_folder = os.path.join(args.output_folder, args.training_name)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    log_path = os.path.join(args.output_folder, 'logs', args.training_name)
     if os.path.exists(log_path):
         rmtree(log_path)
     logger = SummaryWriter(log_path)
 
     # Train
+    best_loss = math.inf 
     mb = master_bar(range(args.nb_epochs))
     for epoch_idx in mb:
         # Training
@@ -87,6 +92,16 @@ def main(args):
 
         mb.first_bar.comment = f"Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs}"
         mb.write(f'Epoch {start_epoch+epoch_idx+1}/{start_epoch+args.nb_epochs} - Validation loss: {val_loss:.4} - Accuracy: {accuracy:.2%}')
+
+        # State saving
+        if val_loss < best_loss:
+            print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
+            best_loss = val_loss
+            torch.save(dict(epoch=start_epoch + epoch_idx,
+                            model_state_dict=net.state_dict(),
+                            optimizer_state_dict=optimizer.state_dict(),
+                            val_loss=val_loss),
+                       os.path.join(output_folder, "training_state.pth"))
 
         if logger is not None:
             current_iter = (start_epoch + epoch_idx + 1) * len(train_loader)
@@ -122,6 +137,7 @@ if __name__ == '__main__':
     parser.add_argument("--nb_epochs", "-n", type=int, default=10, help="Number of epochs to train (default: 10)")
     # Session management
     parser.add_argument("--resume", type=str, default=None, help="Checkpoint file to resume (default: None)")
+    parser.add_argument("--output_folder", type=str, default='.', help="Output folder for log and states (default: '.')")
     args = parser.parse_args()
 
     main(args)
